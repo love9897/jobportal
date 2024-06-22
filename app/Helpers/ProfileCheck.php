@@ -51,10 +51,14 @@ function empProfileCheck()
     return $profile_complete;
 
 }
-function getEmployeeSkills()
+function getEmployeeSkills($employee_id = null)
 {
-    $id = Auth::id();
-
+    $id = null;
+    if ($employee_id) {
+        $id = $employee_id;
+    } else {
+        $id = Auth::id();
+    }
     $skill_id = [];
     if ($id) {
         $data = User::find($id);

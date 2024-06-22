@@ -39,7 +39,6 @@ Route::get('/employee/profile/edit', [EmployeeController::class, 'profileEdit'])
 
 Route::post('/employee/profile/store', [EmployeeController::class, 'edit'])->name('employee.store');
 
-
 Route::post('/edit/store', [EmployerController::class, 'edit'])->name('subject.edit');
 // add job
 Route::get('/job/create', [EmployerController::class, 'add'])->name('subject.add');
@@ -69,16 +68,23 @@ Route::get('/notification', [JobController::class, 'notification'])->name('inque
 
 Route::post('/review', [EmployeeController::class, 'review'])->name('application.review');
 
-Route::get('/employee/message', [EmployeeController::class, 'message'])->name('chat.employee');
+Route::get('/employee/message', [ChatController::class, 'employee_message'])->name('chat.employee');
 
 Route::get('/employer/message', [ChatController::class, 'is_employee_apply'])->name('chat.employer');
 
-Route::get('/employer/message/{id?}', [ChatController::class, 'is_employee_apply'])->name('chat.message');
+Route::get('/employer/message/{employee_id?}', [ChatController::class, 'chat'])->name('chat.employee.message');
+
+Route::get('/employee/message/{employer_id?}', [ChatController::class, 'chat'])->name('chat.employer.message');
 
 
+Route::get('/chat/profile/{id?}', [ChatController::class, 'employeeProfile'])->name('chat.employee.profile');
+
+Route::get('/chat/companyProfile/{employer_id?}', [ChatController::class, 'employerProfile'])->name('chat.employer.profile');
+
+Route::post('/employer/message/', [ChatController::class, 'message'])->name('chat.employer.message');
 
 
-
+Route::get('job/{employer_id}', [ChatController::class, 'job'])->name('chat.employer.jobs');
 
 
 

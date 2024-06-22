@@ -202,7 +202,8 @@ class JobController extends Controller
         $chat = Chat::create([
             'employer_id' => $job->employer_id,
             'employee_id' => $id,
-            'msg' => $employee->name . ' applied for ' . $job->job_title . ' job'
+            'msg' => $employee->name . ' applied for ' . $job->job_title . ' job',
+            'origin' => $id
         ]);
 
 

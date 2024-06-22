@@ -27,9 +27,10 @@
             <ul class="navbar-nav mb-2 mb-lg-0">
 
                 <li class="nav-item">
-                    <a href="{{ route('chat.employee') }}"> <img src="{{ asset('assets/img/icons8-message-75.png') }}"
+                    <a href="{{ url('employee/message') }}"> <img src="{{ asset('assets/img/icons8-message-75.png') }}"
                             class="rounded-circle mr-1" alt="" width="35" height="35"> </a>
                 </li>
+            
                 <li class="nav-item dropdown profile-menu">
 
                     <a class="nav-link dropdown-toggle mx-2" id="userDropdown" role="button" data-bs-toggle="dropdown"

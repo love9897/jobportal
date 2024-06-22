@@ -18,7 +18,12 @@ class Employer extends Model
         return $this->hasMany(Job::class, 'employer_id', 'id');
 
     }
-    
-   
+
+    public function employerToUser()
+    {
+        return $this->hasOne(User::class, 'id', 'employer_id');
+    }
+
+
 
 }

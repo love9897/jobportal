@@ -2,9 +2,6 @@
     dd($employerdata);
 @endphp --}}
 
-
-
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <img class="mx-2" src="{{ Storage::url('public/upload/user/') . $employerdata->image }}" alt="..."
