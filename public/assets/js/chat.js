@@ -1,8 +1,55 @@
 $(document).ready(function(){
 
-   setInterval(getdata,1000);
 
-    $('.employee-id').click(function(e){
+
+    // setInterval(getdata,1000);
+
+   $('.search').on('input', function(e){
+    e.preventDefault();
+    let key = $('.search').val();
+    
+    if (key.length > 0){
+
+      
+        $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type:"POST",
+        url:base_url+'/search',
+        data:{'key':key},
+        success:function (data){
+            let response = data;
+            
+            
+            response.user.forEach(users => {
+                users.forEach(user => {
+
+                   $('#searchResults').html(`
+                                       <a  data-id="${user.id}"  
+                                        class="list-group-item list-group-item-action border-0 employee-id">
+                                        <div class="d-flex align-items-start">
+                                            <img src="${base_url}/storage/upload/user/${user.image}"
+                                                class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
+                                                height="40">
+                                            <div class="flex-grow-1 ml-3">
+                                                 ${user.name} 
+                                                <div class="small"><span class="fas fa-circle chat-online"></span> Online
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>`);
+                                });
+                            });
+                        }
+                    });
+                    $('#searchResults').show();
+                } else {
+                    $('#searchResults').hide(); 
+                }
+            });    
+    $(document).on('click','.employee-id',function(e){
+   
         e.preventDefault();
 
         id = $(this).data('eid');
@@ -43,7 +90,7 @@ $(document).ready(function(){
 
 });
 
-function getdata(){  
+    function getdata(){  
 
     let id = $('.dynamic-reciever-id').val();
     $.ajax({
@@ -62,10 +109,7 @@ function getdata(){
         }      
     });
     
-    
-
     return false;
+    }
 
-
-
-}
+    

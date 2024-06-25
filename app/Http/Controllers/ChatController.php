@@ -32,9 +32,13 @@ class ChatController extends Controller
         }
 
         $data = array_unique($data);
-        $chat = Chat::where(['employee_id' => 4])->get();
-        $employee = User::find(4);
 
+        if (isset($data)) {
+            $id = $data[0] ?? null;
+            $chat = Chat::where(['employee_id' => $id])->get();
+            $employee = User::find($id);
+
+        }
         return view('Chat.chat', ['employerdata' => employerData(), 'chats' => $chat, 'employee_id' => $data, 'employee' => $employee]);
 
     }
@@ -52,10 +56,14 @@ class ChatController extends Controller
         foreach ($jobs as $val) {
             $data[] = $val->jobs->employer_id;
         }
-
         $data = array_unique($data);
-        // $chat = Chat::where(['employer_id' => 1])->get();
-        $employer = User::find(1);
+        if (isset($data)) {
+            $id = $data[0] ?? null;
+            $chat = Chat::where(['employer_id' => $id])->get();
+            $employer = User::find($id);
+
+        }
+
 
         return view('Chat.chat', ['employerdata' => employerData(), 'employer_id' => $data, 'employer' => $employer]);
 
@@ -156,11 +164,38 @@ class ChatController extends Controller
     {
         if ($employer_id) {
             $jobs = Job::where('employer_id', '=', $employer_id)->get();
-            
-            return view('Chat.employerJobs', ['jobs' => $jobs ,'employerdata' => employerData()]);
+
+            return view('Chat.employerJobs', ['jobs' => $jobs, 'employerdata' => employerData()]);
         }
     }
 
 
+    public function search(Request $request)
+    {
+        if ($request->key) {
+            $id = Auth::id();
+            $jobs = Job::where(['employer_id' => $id,])->get();
+
+            $data = [];
+
+            foreach ($jobs as $val) {
+                foreach ($val->inquery as $value) {
+                    if ($value->employee_id) {
+                        $data[] = $value->employee_id;
+                    }
+                }
+            }
+
+            $data = array_unique($data);
+            $user = [];
+            foreach ($data as $employee_id) {
+                $user[] = User::where('id', '=', $employee_id)
+                    ->where('name', 'LIKE', '%' . $request->key . '%')
+                    ->get(['name', 'id' ,'image']);
+            }
+            return response()->json(['is_sucess' => true, 'user' => $user]);
+
+        }
+    }
 }
 

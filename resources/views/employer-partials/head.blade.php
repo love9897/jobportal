@@ -47,4 +47,8 @@
 {{-- chat --}}
 <link rel="stylesheet" href="{{ asset('assets/css/chat_page.css') }}">
 
+{{-- search-results --}}
+<link rel="stylesheet" href="{{ asset('assets/css/search_results.css') }}">
+
+
 <title>JOB PORTAL</title>

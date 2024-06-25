@@ -76,6 +76,7 @@ Route::get('/employer/message/{employee_id?}', [ChatController::class, 'chat'])-
 
 Route::get('/employee/message/{employer_id?}', [ChatController::class, 'chat'])->name('chat.employer.message');
 
+Route::post('/search', [ChatController::class, 'search'])->name('chat.search');
 
 Route::get('/chat/profile/{id?}', [ChatController::class, 'employeeProfile'])->name('chat.employee.profile');
 
