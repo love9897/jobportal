@@ -12,58 +12,54 @@
                                     <div class="flex-grow-1">
 
                                         <input type="text" class="form-control my-3 search" placeholder="Search...">
-
-
                                     </div>
-
                                 </div>
-                                <div id="searchResults" class="search-results employee-id">
-                                </div>
-
                             </div>
 
 
+                            <div id="searchResults" class="search-results"></div>
+                            <div class="all-employee">
 
-                            @if (isset($employee_id))
-                                @foreach ($employee_id as $details)
-                                    @php
-                                        $detail = \App\Models\User::find($details);
-                                    @endphp
-
-                                    <a href="" data-eid="{{ $detail->id }}"
-                                        class="list-group-item list-group-item-action border-0 employee-id">
-                                        <div class="d-flex align-items-start">
-                                            <img src="{{ Storage::url('public/upload/user/' . $detail->image) }}"
-                                                class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
-                                                height="40">
-                                            <div class="flex-grow-1 ml-3">
-                                                {{ $detail->name }}
-                                                <div class="small"><span class="fas fa-circle chat-online"></span> Online
+                                @if (isset($employee_id))
+                                    @foreach ($employee_id as $detail)
+                                        <a href="" data-eid="{{ $detail->id }}"
+                                            class="list-group-item list-group-item-action border-0 employee-id">
+                                            <div class="d-flex align-items-start">
+                                                <img src="{{ Storage::url('public/upload/user/' . $detail->image) }}"
+                                                    class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
+                                                    height="40">
+                                                <div class="flex-grow-1 ml-3">
+                                                    {{ $detail->name }}
+                                                    <div class="small"><span class="fas fa-circle chat-online"></span>
+                                                        Online
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                @endforeach
-                            @else
-                                @foreach ($employer_id as $id)
-                                    @php
-                                        $user = \App\Models\User::find($id);
-                                    @endphp
-                                    <a href="" data-eid="{{ $user->id }}"
-                                        class="list-group-item list-group-item-action border-0 employee-id">
-                                        <div class="d-flex align-items-start">
-                                            <img src="{{ Storage::url('public/upload/user/' . $user->image) }}"
-                                                class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
-                                                height="40">
-                                            <div class="flex-grow-1 ml-3">
-                                                {{ $user->name }}
-                                                <div class="small"><span class="fas fa-circle chat-online"></span> Online
+                                        </a>
+                                    @endforeach
+                                    {{ $employee_id->links() }}
+                                @else
+                                    @foreach ($employer_id as $user)
+                                       
+                                        <a href="" data-eid="{{ $user->id }}"
+                                            class="list-group-item list-group-item-action border-0 employee-id">
+                                            <div class="d-flex align-items-start">
+                                                <img src="{{ Storage::url('public/upload/user/' . $user->image) }}"
+                                                    class="rounded-circle mr-1" alt="Sharon Lessman" width="40"
+                                                    height="40">
+                                                <div class="flex-grow-1 ml-3">
+                                                    {{ $user->name }}
+                                                    <div class="small"><span class="fas fa-circle chat-online"></span>
+                                                        Online
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                @endforeach
-                            @endif
+                                        </a>
+                                    @endforeach
+                                    {{ $employer_id->links() }}
+                                @endif
+
+                            </div>
                             <hr class="d-block d-lg-none mt-1 mb-0">
                         </div>
 

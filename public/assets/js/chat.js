@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 
 
-    // setInterval(getdata,1000);
+    setInterval(getdata,1000);
 
    $('.search').on('input', function(e){
     e.preventDefault();
@@ -16,17 +16,16 @@ $(document).ready(function(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         type:"POST",
-        url:base_url+'/search',
+        url:current_url+'/search',
         data:{'key':key},
         success:function (data){
             let response = data;
-            
             
             response.user.forEach(users => {
                 users.forEach(user => {
 
                    $('#searchResults').html(`
-                                       <a  data-id="${user.id}"  
+                                       <a  href="" data-eid="${user.id}"
                                         class="list-group-item list-group-item-action border-0 employee-id">
                                         <div class="d-flex align-items-start">
                                             <img src="${base_url}/storage/upload/user/${user.image}"
@@ -44,10 +43,14 @@ $(document).ready(function(){
                         }
                     });
                     $('#searchResults').show();
+                    $('.all-employee').hide();
                 } else {
                     $('#searchResults').hide(); 
+                    $ ('.all-employee').show()
+
                 }
             });    
+
     $(document).on('click','.employee-id',function(e){
    
         e.preventDefault();

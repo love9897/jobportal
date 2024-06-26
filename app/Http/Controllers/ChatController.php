@@ -10,6 +10,8 @@ use App\Models\Job_inquiries;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 class ChatController extends Controller
 {
@@ -39,7 +41,28 @@ class ChatController extends Controller
             $employee = User::find($id);
 
         }
-        return view('Chat.chat', ['employerdata' => employerData(), 'chats' => $chat, 'employee_id' => $data, 'employee' => $employee]);
+        $details = [];
+        foreach ($data as $id) {
+            $user = User::find($id);
+            if ($user) {
+                $details[] = $user;
+            }
+        }
+
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 5;
+        $paginator = new LengthAwarePaginator(
+            collect($details)->forPage($currentPage, $perPage),
+            count($details),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+
+
+        return view('Chat.chat', ['employerdata' => employerData(), 'chats' => $chat, 'employee_id' => $paginator, 'employee' => $employee]);
 
     }
 
@@ -59,13 +82,30 @@ class ChatController extends Controller
         $data = array_unique($data);
         if (isset($data)) {
             $id = $data[0] ?? null;
-            $chat = Chat::where(['employer_id' => $id])->get();
+            // $chat = Chat::where(['employer_id' => $id])->get();
             $employer = User::find($id);
 
         }
+        $details = [];
+        foreach ($data as $id) {
+            $user = User::find($id);
+            if ($user) {
+                $details[] = $user;
+            }
+        }
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 5;
+        $paginator = new LengthAwarePaginator(
+            collect($details)->forPage($currentPage, $perPage),
+            count($details),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
 
 
-        return view('Chat.chat', ['employerdata' => employerData(), 'employer_id' => $data, 'employer' => $employer]);
+        return view('Chat.chat', ['employerdata' => employerData(), 'employer_id' => $paginator, 'employer' => $employer]);
 
     }
 
@@ -172,7 +212,8 @@ class ChatController extends Controller
 
     public function search(Request $request)
     {
-        if ($request->key) {
+
+        if ($request->routeIs('chat.employee.search')) {
             $id = Auth::id();
             $jobs = Job::where(['employer_id' => $id,])->get();
 
@@ -191,10 +232,32 @@ class ChatController extends Controller
             foreach ($data as $employee_id) {
                 $user[] = User::where('id', '=', $employee_id)
                     ->where('name', 'LIKE', '%' . $request->key . '%')
-                    ->get(['name', 'id' ,'image']);
+                    ->get(['name', 'id', 'image']);
             }
             return response()->json(['is_sucess' => true, 'user' => $user]);
 
+        }
+        if ($request->routeIs('chat.employer.search')) {
+
+            
+            $id = Auth::id();
+            $jobs = Job_inquiries::where(['employee_id' => $id,])->get();
+
+            $data = [];
+
+            foreach ($jobs as $val) {
+                $data[] = $val->jobs->employer_id;
+            }
+            
+            $data = array_unique($data);
+
+            $user = [];
+            foreach ($data as $employer_id) {
+                $user[] = User::where('id', '=', $employer_id)
+                    ->where('name', 'LIKE', '%' . $request->key . '%')
+                    ->get(['name', 'id', 'image']);
+            }
+            return response()->json(['is_sucess' => true, 'user' => $user]);
         }
     }
 }
